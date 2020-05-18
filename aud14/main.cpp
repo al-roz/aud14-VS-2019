@@ -5,86 +5,84 @@ using namespace std;
 
 const int n = 10;
 
-struct MATRIX
+struct Matrix
 {
 	int size;	
 	int** matx;
 	int id;
-};
 
-typedef struct MATRIX Matrix;
-
-void memory_allocation(Matrix* x)
-{
-	x->matx = new int* [x->size];
-	
-	for (int i = 0; i < x->size; i++)
+	void memory_allocation()
 	{
-		x->matx[i] = new int[x->size];
+		matx = new int* [size];
+		for (int i = 0; i < size; i++)
+			matx[i] = new int[size];
 	}
-}
 
-void generateRandom(Matrix* x)
-{
-	for (int i = 0; i < x->size; i++)
-		for (int j = 0; j < x->size; j++)
-			x->matx[i][j] = rand() % 20 + 1;
-}
-
-void input(Matrix* x)
-{
-	x->size = rand() % 10 + 1;
-	cout << x->size << endl;
-	memory_allocation(x);
-
-	//for (int i = 0; i < x->size; i++)
-	//	for (int j = 0; j < x->size; j++)
-	//		cin >> x->matx[i][j];
-
-	generateRandom(x);
-}
-
-void input(Matrix* x, int size)
-{
-	x->size = size;
-	cout << x->size << endl;
-	memory_allocation(x);
-
-	//for (int i = 0; i < x->size; i++)
-	//	for (int j = 0; j < x->size; j++)
-	//		cin >> x->matx[i][j];
-
-	generateRandom(x);
-}
-
-void output(Matrix* x)
-{
-	for (int i = 0; i < x->size; i++)
+	void generateRandom()
 	{
-		for (int j = 0; j < x->size; j++)
-			cout << x->matx[i][j] << " ";
-		cout << endl;
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				matx[i][j] = rand() % 20 + 1;
 	}
-}
 
-void output(string FileNamse, Matrix* x)
-{
-	ofstream file;
-	file.open(FileNamse);
-	for (int kol = 0; kol < n; kol++)
+	void input()
 	{
-		
-		for (int i = 0; i < x[kol].size; i++)
+		size = rand() % 10 + 1;
+		cout << size << endl;
+		memory_allocation();
+		/*for (int i = 0 ; i < size ; i++)
+			for (int j = 0; j < size; j++)
+			{
+				cin >> matx[i][j];
+			}*/
+		generateRandom();
+	}
+
+	void input(int x)
+	{
+		size = x;
+		cout << size << endl;
+		memory_allocation();
+		/*for (int i = 0 ; i < size ; i++)
+			for (int j = 0; j < size; j++)
+			{
+				cin >> matx[i][j];
+			}*/
+		generateRandom();
+	}
+
+	void output()
+	{
+		for (int i = 0; i < size; i++)
 		{
-			for (int j = 0; j < x[kol].size; j++)
-				file << x[kol].matx[i][j] << " ";
+			for (int j = 0; j < size; j++)
+			{
+				cout << matx[i][j] << " " ;
+			}
+			cout << endl;
+		}
+	}
+
+	void output(string FileName, Matrix* x)
+	{
+		ofstream file;
+		file.open(FileName);
+		for (int kol = 0; kol < n; kol++)
+		{
+
+			for (int i = 0; i < x[kol].size; i++)
+			{
+				for (int j = 0; j < x[kol].size; j++)
+					file << x[kol].matx[i][j] << " ";
+				file << endl;
+			}
 			file << endl;
 		}
-		file << endl;
-	}	
-	file.close();
+		file.close();
+	}
+};
 
-}
+
 
 int main()
 {
@@ -93,13 +91,11 @@ int main()
 	Matrix* m = new Matrix [n];
 	for (int i = 0; i < n; i++)
 	{
-		input(&m[i]);
-		output(&m[i]);
+		m[i].input();
+		m[i].output();
 		m[i].id = i;
 		cout << endl;
 	}
-
-	output("Test.txt", m);
-	
+	m->output("Test.txt",m);
 
 }
