@@ -1,6 +1,8 @@
 #include <iostream>
 #include <time.h>
 #include <fstream>
+#include <ctime>
+#include <Windows.h>
 using namespace std;
 
 const int n = 10;
@@ -28,7 +30,7 @@ struct Matrix
 	void input()
 	{
 		size = rand() % 10 + 1;
-		cout << size << endl;
+		cout << "size = " << size << endl;
 		memory_allocation();
 		/*for (int i = 0 ; i < size ; i++)
 			for (int j = 0; j < size; j++)
@@ -41,7 +43,7 @@ struct Matrix
 	void input(int x)
 	{
 		size = x;
-		cout << size << endl;
+		cout << "size = " << size << endl;
 		memory_allocation();
 		/*for (int i = 0 ; i < size ; i++)
 			for (int j = 0; j < size; j++)
@@ -80,13 +82,87 @@ struct Matrix
 		}
 		file.close();
 	}
+
+	Matrix multiplication(Matrix* x)
+	{
+		if (size != x->size)
+		{
+			cout << "multiplication is not possible";
+		}
+		Matrix c;
+		c.matx = new int* [size];
+		c.size = size;
+		for (int i = 0; i < size; i++)
+		{
+			c.matx[i] = new int[x->size];
+			for (int j = 0; j < x->size; j++)
+			{
+				c.matx[i][j] = 0;
+				for (int k = 0; k < size; k++)
+					c.matx[i][j] += matx[i][k] * x->matx[k][j];
+			}
+
+		}
+		return c;
+	}
 };
 
+class Timer
+{
+private:
+	double _start;
+	double _end;
+	double res;
+	int sec;
+	int min;
+	void res_ans()
+	{
+		_end = clock();
+		res = (_end - _start) / CLOCKS_PER_SEC;
+	}
 
+public:
+	void start()
+	{
+		_start = clock();
+	}
+
+	void stop()
+	{
+		res_ans();
+		cout << "time =" << res * 1000 << "ms";
+	}
+	void stop(string s)
+	{
+		
+		res_ans();
+		int x;
+		x = (int)res;
+		if (s == "s")
+		{			
+			sec = x;
+			cout << "time =" << sec << " s";
+		}
+		if (s == "m")
+		{
+			min = sec / 60;
+			cout << "time =" << min << " min";
+		}
+		if (s == "full")
+		{
+			cout << "time = " << x / 60 << " min " << x % 60 << " s " << res - x << "ms";
+		}
+
+	}
+
+
+};
 
 int main()
 {
 	srand(time(0));
+	Timer t;
+	t.start();
 	
 	Matrix* m = new Matrix [n];
 	for (int i = 0; i < n; i++)
@@ -96,6 +172,12 @@ int main()
 		m[i].id = i;
 		cout << endl;
 	}
+	Matrix k;
+	Sleep(2000);
+	k = m[0].multiplication(&m[0]);
 	m->output("Test.txt",m);
+	k.output();
+	t.stop();
+	
 
 }
